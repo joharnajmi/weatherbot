@@ -1,115 +1,72 @@
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Dependencies\n",
-    "import tweepy\n",
-    "import time\n",
-    "import json\n",
-    "import random\n",
-    "import requests as req\n",
-    "import datetime\n",
-    "from config import consumer_key, consumer_secret, access_token, access_token_secret, weather_api_key"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Twitter API Keys\n",
-    "consumer_key = consumer_key\n",
-    "consumer_secret = consumer_secret\n",
-    "access_token = access_token\n",
-    "access_token_secret = access_token_secret"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Weather API Key\n",
-    "weather_api_key= weather_api_key "
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Create a function that gets the weather in London and Tweets it\n",
-    "def WeatherTweet():\n",
-    "\n",
-    "    # Construct a Query URL for the OpenWeatherMap\n",
-    "    url = \"http://api.openweathermap.org/data/2.5/weather?\"\n",
-    "    city = \"Washington, D.C.\"\n",
-    "    units = \"imperial\"\n",
-    "    query_url = url + \"appid=\" + api_key + \"&q=\" + city + \"&units=\" + units\n",
-    "    print(query_url)\n",
-    "\n",
-    "    # Perform the API call to get the weather\n",
-    "    weather_reponse = req.get(query_url)\n",
-    "    weather_json = weather_response.json()\n",
-    "    print(weather_json)\n",
-    "\n",
-    "    # Twitter credentials\n",
-    "    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)\n",
-    "    auth.set _access_token(access_token, )\n",
-    "\n",
-    "\n",
-    "    # Tweet the weather\n",
-    "\n",
-    "\n",
-    "    # Print success message\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Set timer to run every 1 hour\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.7.3"
-  },
-  "nteract": {
-   "version": "0.8.4"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 2
-}
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[6]:
+
+
+# Dependencies
+import os
+import tweepy
+import time
+import json
+import random
+import requests as req
+import datetime
+consumer_key = os.environ.get("consumer_key")
+consumer_secret = os.environ.get("consumer_secret")
+access_token = os.environ.get("access_token")
+access_token_secret = os.environ.get("access_token_secret")
+weather_api_key = os.environ.get("weather_api_key")
+
+# In[7]:
+
+
+
+
+# In[8]:
+
+
+# Weather API
+# weather_api_key
+
+
+# In[9]:
+
+
+# Create a function that gets the weather in London and Tweets it
+def WeatherTweet():
+
+    # Construct a Query URL for the OpenWeatherMap
+    url = "http://api.openweathermap.org/data/2.5/weather?"
+    city = "Washington, D.C."
+    units = "imperial"
+    query_url = url + "appid=" + weather_api_key + "&q=" + city + "&units=" + units
+    print(query_url)
+
+    # Perform the API call to get the weather
+    weather_response = req.get(query_url)
+    weather_json = weather_response.json()
+    print(weather_json)
+
+    # Twitter credentials
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_token_secret)
+    api = tweepy.API(auth, parser=tweepy.parsers.JSONParser())
+
+    # Tweet the weather
+    api.update_status(
+        "Hello World! Weather in Washington D.C.:" +\
+        (datetime.datetime.now().strftime("%I:%M %p") + " " +\
+         str(weather_json["main"]["temp"])+"F"))
+
+    # Print success message
+    print("Tweeted successfully!")
+
+
+# In[ ]:
+
+
+# Set timer to run every 1 minute
+while(True):
+    WeatherTweet()
+    time.sleep(60)
